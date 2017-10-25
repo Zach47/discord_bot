@@ -1,6 +1,6 @@
 # Kreedz's very own Discord bot for CS:GO KZ!
 
-[This bot](https://go.twitch.tv/kreedz_bot) was created by [Zach47](http://steamcommunity.com/id/zach47).
+[This bot](https://github.com/Zach47/discord_bot/blob/master/discordbot.js) was created by [Zach47](http://steamcommunity.com/id/zach47).
 
 ____
 # User Commands
