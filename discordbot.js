@@ -18,6 +18,7 @@ var ProVNLTime = "NA";
 var TPVNLTime = "NA";
 var ProVNLPlayer = "NA";
 var TPVNLPlayer = "NA";
+var kzstatsLink = "https://www.jacobwbarrett.com/kreedz/gokzstats.html";
 
 // https://www.npmjs.com/package/steam-api
 var user = new steamApi.User(STEAM_API_KEY, optionalSteamId);
@@ -78,10 +79,12 @@ function loadMap(map) {
 }
 
 function printToChat(message, map) {
+
+
   message.channel.send({embed: {
     color: 0xE45051,
     title: mapName,
-    url: kzstatsLink,
+    url: kzstatsLink + "?map=" + mapName,
     thumbnail: {
       url: "http://www.kzstats.com/img/map/" + mapName + ".jpg"
     },
@@ -92,7 +95,7 @@ function printToChat(message, map) {
         inline: true
       },
       {
-        name: "Nub Record",
+        name: "Overall Record",
         value: "- - - - - - - -",
         inline: true
       },
@@ -170,7 +173,7 @@ function mapInfoRequest() {
 
 function getProKZTRecord(map) {
   var request = new XMLHttpRequest();
-  var APIRecordLink = "https://staging.kztimerglobal.com/api/v1/records/top?map_name=" + mapName + "&tickrate=128&modes_list_string=kz_timer&has_teleports=false&limit=1";
+  var APIRecordLink = "https://kztimerglobal.com/api/v1/records/top?map_name=" + mapName + "&tickrate=128&stage=0&modes_list_string=kz_timer&has_teleports=false&limit=1";
   request.open('GET', APIRecordLink, true);
   request.onload = function() {
     if (request.status >= 200 && request.status < 400) {
@@ -200,7 +203,7 @@ function getProKZTRecord(map) {
 
 function getProSKZRecord(map) {
   var request = new XMLHttpRequest();
-  var APIRecordLink = "https://staging.kztimerglobal.com/api/v1/records/top?map_name=" + mapName + "&tickrate=128&modes_list_string=kz_simple&has_teleports=false&limit=1";
+  var APIRecordLink = "https://kztimerglobal.com/api/v1/records/top?map_name=" + mapName + "&tickrate=128&stage=0&modes_list_string=kz_simple&has_teleports=false&limit=1";
   request.open('GET', APIRecordLink, true);
   request.onload = function() {
     if (request.status >= 200 && request.status < 400) {
@@ -231,7 +234,7 @@ function getProSKZRecord(map) {
 
 function getProVNLRecord(map) {
   var request = new XMLHttpRequest();
-  var APIRecordLink = "https://staging.kztimerglobal.com/api/v1/records/top?map_name=" + mapName + "&tickrate=128&modes_list_string=kz_vanilla&has_teleports=false&limit=1";
+  var APIRecordLink = "https://kztimerglobal.com/api/v1/records/top?map_name=" + mapName + "&tickrate=128&stage=0&modes_list_string=kz_vanilla&has_teleports=false&limit=1";
   request.open('GET', APIRecordLink, true);
   request.onload = function() {
     if (request.status >= 200 && request.status < 400) {
@@ -262,7 +265,7 @@ function getProVNLRecord(map) {
 
 function getTPKZTRecord(map) {
   var request = new XMLHttpRequest();
-  var APIRecordLink = "https://staging.kztimerglobal.com/api/v1/records/top?map_name=" + mapName + "&tickrate=128&modes_list_string=kz_timer&limit=1";
+  var APIRecordLink = "https://kztimerglobal.com/api/v1/records/top?map_name=" + mapName + "&tickrate=128&stage=0&modes_list_string=kz_timer&limit=1";
   request.open('GET', APIRecordLink, true);
   request.onload = function() {
     if (request.status >= 200 && request.status < 400) {
@@ -293,7 +296,7 @@ function getTPKZTRecord(map) {
 
 function getTPSKZTRecord(map) {
   var request = new XMLHttpRequest();
-  var APIRecordLink = "https://staging.kztimerglobal.com/api/v1/records/top?map_name=" + mapName + "&tickrate=128&modes_list_string=kz_simple&limit=1";
+  var APIRecordLink = "https://kztimerglobal.com/api/v1/records/top?map_name=" + mapName + "&tickrate=128&stage=0&modes_list_string=kz_simple&limit=1";
   request.open('GET', APIRecordLink, true);
   request.onload = function() {
     if (request.status >= 200 && request.status < 400) {
@@ -324,7 +327,7 @@ function getTPSKZTRecord(map) {
 
 function getTPVNLRecord(map) {
   var request = new XMLHttpRequest();
-  var APIRecordLink = "https://staging.kztimerglobal.com/api/v1/records/top?map_name=" + mapName + "&tickrate=128&modes_list_string=kz_vanilla&limit=1";
+  var APIRecordLink = "https://kztimerglobal.com/api/v1/records/top?map_name=" + mapName + "&tickrate=128&stage=0&modes_list_string=kz_vanilla&limit=1";
   request.open('GET', APIRecordLink, true);
   request.onload = function() {
     if (request.status >= 200 && request.status < 400) {
@@ -364,6 +367,10 @@ client.on('message', message => {
   const args = message.content.slice(prefix.length).trim().split(/ +/g);
   const command = args.shift().toLowerCase();
 
+  if (!message.content.indexOf("!") === 0 || message.content.indexOf("!") === -1) {
+    return;
+  }
+
   if(command === "servers") {
     message.channel.send("List of KZ Servers | http://www.kzstats.com/servers/");
     return;
@@ -379,6 +386,10 @@ client.on('message', message => {
     return;
   }
 
+  if (command === "help") {
+    message.channel.send("Need to know the commands? Go here! | <https://github.com/Zach47/discord_bot>")
+  }
+
   if (command === 'maptop') {
     if (message.content.split(" ")[1] == void 0) {
       message.channel.send("You forgot a map name! " + message.author);
@@ -388,14 +399,13 @@ client.on('message', message => {
       message.channel.send("That's not a map! " + message.author);
     }
     else {
-      kzstatsLink = "https://www.jacobwbarrett.com/kreedz/gokzstats.html";
       getTPKZTRecord(mapName);
       getProKZTRecord(mapName);
       getTPSKZTRecord(mapName);
       getProSKZRecord(mapName);
       getTPVNLRecord(mapName);
       getProVNLRecord(mapName);
-      setTimeout(function() {printToChat(message,mapName);}, 2000);
+      setTimeout(function() {printToChat(message,mapName);}, 1500);
     }
   }
 });
