@@ -5,7 +5,9 @@
 ____
 # User Commands
 
-**!maptop** (map name) - Provides an embed message to the client who called it providing them with information on all three modes and their records on the map requested..
+**!maptop** (map name) - Provides an embed message to the client who called it providing them with information on all three modes and their records on the map requested.
+
+**!bmaptop** (map name) (Bonus number) - Does the same as !maptop but returns the times for the specific bonus #.
 
 **!kzstats** - Provides a link to [KZStats](http://www.kzstats.com/).
 
